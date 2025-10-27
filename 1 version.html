@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZizaFirst — Demo Homepage</title>
+  <meta name="description" content="ZizaFirst — creative tech agency demo homepage (animated, GitHub Pages ready)" />
+  <!-- Fonts + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#07172a;
+      --card:#081426;
+      --muted:#9fb0c9;
+      --accent1:#0078ff;
+      --accent2:#00c6ff;
+      --glass: rgba(255,255,255,0.03);
+      --maxw:1200px;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#eaf3ff;background:linear-gradient(180deg,#041025 0%, #07172a 100%);-webkit-font-smoothing:antialiased;scroll-behavior:smooth;}
+    a{color:inherit}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+    /* NAVBAR */
+    .navbar{position:sticky;top:0;z-index:60;backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(6,16,36,0.45), rgba(6,16,36,0.15));border-bottom:1px solid rgba(255,255,255,0.03)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:40px;width:40px;object-fit:cover;border-radius:8px}
+    .brand .title{font-weight:700;color:white;letter-spacing:0.3px}
+    nav ul{display:flex;gap:18px;list-style:none;padding:0;margin:0}
+    nav a{padding:8px 10px;border-radius:8px;color:var(--muted);font-weight:600;text-decoration:none;display:inline-block;position:relative}
+    nav a:hover{color:white}
+    nav a::after{content:'';height:2px;background:linear-gradient(90deg,var(--accent1),var(--accent2));position:absolute;left:10px;right:10px;bottom:-8px;border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform .28s ease}
+    nav a:hover::after{transform:scaleX(1)}
+
+    /* HERO */
+    .hero{min-height:86vh;display:grid;grid-template-columns:1fr 460px;gap:36px;align-items:center;padding:48px 0}
+    .hero-left{padding-right:6px}
+    .eyebrow{display:inline-block;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:6px 12px;border-radius:999px;color:white;font-weight:700;margin-bottom:18px}
+    .hero-title{font-size:44px;line-height:1.02;margin:0 0 14px;color:white}
+    .hero-sub{color:var(--muted);font-size:18px;margin:0 0 20px}
+    .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;transition:transform .18s ease, box-shadow .18s ease}
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;box-shadow:0 10px 30px rgba(0, 198, 255, .12)}
+    .btn-ghost{border:1px solid rgba(255,255,255,0.08);color:var(--muted);background:transparent}
+    .btn-primary:hover{transform:translateY(-4px)}
+    .btn-ghost:hover{transform:translateY(-4px);color:white}
+
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:16px;box-shadow:0 10px 40px rgba(2,8,23,0.6)}
+    .hero-media{height:420px;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))}
+
+    /* SECTIONS */
+    section{padding:72px 0}
+    .section-title{font-size:28px;color:white;margin:0 0 18px;text-align:center}
+    .section-sub{color:var(--muted);text-align:center;margin-bottom:28px;max-width:760px;margin-left:auto;margin-right:auto}
+
+    /* Services grid */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .card{background:var(--glass);padding:24px;border-radius:12px;backdrop-filter: blur(8px);transition:transform .26s cubic-bezier(.2,.9,.3,1), box-shadow .26s}
+    .card:hover{transform:translateY(-12px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
+    .card h4{margin:10px 0 6px;color:white}
+    .card p{color:var(--muted);margin:0;font-size:15px}
+
+    /* Courses / Placements lists */
+    .list{display:grid;gap:14px}
+    .list-item{display:flex;gap:14px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01));padding:14px;border-radius:10px}
+    .list-item img{width:110px;height:70px;object-fit:cover;border-radius:8px}
+
+    /* About */
+    .about-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    .about-image img{width:100%;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+
+    /* Footer / contact CTA */
+    .cta{display:flex;align-items:center;justify-content:space-between;padding:26px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#003;box-shadow:0 20px 60px rgba(0,120,255,0.12)}
+    .cta h3{margin:0;color:white}
+    .footer{padding:36px 0;color:var(--muted);text-align:center}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{grid-template-columns:1fr;gap:28px}
+      .about-grid{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:640px){
+      nav ul{display:none}
+      .nav-toggle{display:inline-block}
+      .grid{grid-template-columns:1fr}
+      .hero-title{font-size:28px}
+      .hero-media{height:260px}
+      .brand .title{display:none}
+    }
+
+    /* small nav-toggle */
+    .nav-toggle{display:none;background:transparent;border:0;color:var(--muted);font-size:20px}
+    .mobile-menu{display:none;flex-direction:column;gap:8px;padding:12px 20px}
+    .mobile-menu a{padding:10px;border-radius:8px}
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">
+        <img src="https://via.placeholder.com/120x120.png?text=Logo" alt="ZizaFirst logo">
+        <div class="title">ZizaFirst</div>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#placements">Placements</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <!-- mobile -->
+        <button class="nav-toggle" aria-expanded="false">&#9776;</button>
+      </nav>
+    </div>
+
+    <!-- mobile menu -->
+    <div class="container mobile-menu" id="mobileMenu" aria-hidden="true">
+      <a href="#hero">Home</a>
+      <a href="#services">Services</a>
+      <a href="#courses">Courses</a>
+      <a href="#placements">Placements</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main class="container">
+    <section id="hero" class="hero">
+      <div class="hero-left">
+        <span class="eyebrow">Creative • Tech • Growth</span>
+        <h1 class="hero-title">We design & build digital products that launch growth.</h1>
+        <p class="hero-sub">ZizaFirst blends modern design, fast engineering and growth marketing to craft digital experiences that convert and scale.</p>
+
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary" id="primaryCta">Get a Quote</a>
+          <a href="#services" class="btn btn-ghost">Our Services</a>
+        </div>
+
+        <!-- quick features -->
+        <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+          <div style="padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:600">Fast delivery</div>
+          <div style="padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:600">Startup-ready</div>
+          <div style="padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.02);color:var(--muted);font-weight:600">Support 24/7</div>
+        </div>
+      </div>
+
+      <aside class="hero-card hero-media">
+        <!-- parallax media placeholder -->
+        <img id="heroImage" src="https://via.placeholder.com/760x420.png?text=Hero+Visual" alt="Hero visual" style="width:100%;height:100%;object-fit:cover;border-radius:10px">
+      </aside>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <h2 class="section-title">Services</h2>
+      <p class="section-sub">We cover the full product lifecycle — design, build, and scale.</p>
+      <div class="grid" id="servicesGrid">
+        <div class="card">
+          <i class="fa-solid fa-paint-brush fa-2x" style="color:var(--accent2)"></i>
+          <h4>Product & UX Design</h4>
+          <p>Design systems, prototypes, usability testing, and delightful interfaces.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-code fa-2x" style="color:var(--accent2)"></i>
+          <h4>Web & Mobile Dev</h4>
+          <p>Modern stacks, performance-first, and production-ready engineering.</p>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-rocket fa-2x" style="color:var(--accent2)"></i>
+          <h4>Growth Engineering</h4>
+          <p>SEO, analytics, CRO, and marketing automation to scale your business.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section id="courses">
+      <h2 class="section-title">Courses</h2>
+      <p class="section-sub">Short, practical courses focused on production skills and job-readiness.</p>
+      <div class="list">
+        <div class="list-item card">
+          <img src="https://via.placeholder.com/220x140.png?text=Course+1" alt="">
+          <div>
+            <h4 style="margin:0 0 6px">Fullstack Web Bootcamp</h4>
+            <p style="margin:0;color:var(--muted)">Build real products using React, Node.js and modern deployment workflows.</p>
+          </div>
+        </div>
+
+        <div class="list-item card">
+          <img src="https://via.placeholder.com/220x140.png?text=Course+2" alt="">
+          <div>
+            <h4 style="margin:0 0 6px">UI/UX Intensive</h4>
+            <p style="margin:0;color:var(--muted)">From user research to polished interfaces — hands-on projects included.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLACEMENTS -->
+    <section id="placements">
+      <h2 class="section-title">Placements</h2>
+      <p class="section-sub">Students from our courses secure roles in product teams — sample outcomes below.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h4>Placement Highlight</h4>
+          <p>Bootcamp grad hired as Frontend Engineer at a fast-growing startup.</p>
+        </div>
+        <div class="card">
+          <h4>Placement Highlight</h4>
+          <p>UI/UX intensive grad joined a product design team at an enterprise.</p>
+        </div>
+        <div class="card">
+          <h4>Placement Highlight</h4>
+          <p>Backend engineer role secured within 2 months of demo project completion.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <h2 class="section-title">About ZizaFirst</h2>
+      <div class="about-grid">
+        <div>
+          <p class="section-sub">We are a creative tech agency blending product thinking with engineering. We help startups and enterprises ship faster, smarter, and with measurable impact.</p>
+          <ul style="color:var(--muted);margin-top:14px">
+            <li>Small cross-functional teams</li>
+            <li>Fast iteration & prototype-first approach</li>
+            <li>Data-informed product decisions</li>
+          </ul>
+        </div>
+        <div class="about-image">
+          <img src="https://via.placeholder.com/420x320.png?text=Team+/+Office" alt="Team">
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="cta">
+        <div>
+          <h3>Ready to build something great?</h3>
+          <p style="margin:6px 0;color:rgba(255,255,255,0.9)">Tell us about your project — we respond quickly.</p>
+        </div>
+        <div>
+          <a href="#" class="btn btn-primary">Contact Us</a>
+        </div>
+      </div>
+
+      <div class="footer" style="margin-top:28px">
+        <small>&copy; <span id="year"></span> ZizaFirst — Demo. All placeholders. </small>
+      </div>
+    </section>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script>
+    // small helpers
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if(toggle){
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !open);
+        mobileMenu.style.display = open ? 'none' : 'flex';
+        mobileMenu.setAttribute('aria-hidden', open);
+      });
+    }
+
+    // smooth nav highlight + close mobile menu on click
+    document.querySelectorAll('nav a, .mobile-menu a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href') || '#';
+        if(href.startsWith('#')){
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({behavior:'smooth', block:'start'});
+          if(window.innerWidth <= 640) { mobileMenu.style.display='none'; toggle.setAttribute('aria-expanded','false'); }
+        }
+      });
+    });
+
+    // GSAP animations & ScrollTrigger
+    (function(){
+      if(typeof gsap === 'undefined') return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero entrance
+      gsap.from('.eyebrow',{y:20,opacity:0,duration:0.8,ease:'power3.out',delay:0.15});
+      gsap.from('.hero-title',{y:36,opacity:0,duration:1,ease:'power3.out',delay:0.25});
+      gsap.from('.hero-sub',{y:20,opacity:0,duration:0.9,ease:'power3.out',delay:0.35});
+      gsap.from('.hero-ctas .btn',{y:18,opacity:0,duration:0.8,stagger:0.08,delay:0.5});
+
+      // Parallax hero image (slight)
+      gsap.to('#heroImage',{yPercent:-6, ease:'none', scrollTrigger:{
+        trigger:'#hero', start:'top top', end:'bottom top', scrub:0.8
+      }});
+
+      // Services cards stagger
+      gsap.from('#servicesGrid .card',{y:30,opacity:0,duration:0.9,stagger:0.12,scrollTrigger:{trigger:'#services',start:'top 80%'}});
+
+      // List items
+      gsap.from('#courses .list-item',{y:24,opacity:0,duration:0.9,stagger:0.12,scrollTrigger:{trigger:'#courses',start:'top 85%'}});
+
+      // Placements & About
+      gsap.from('#placements .card',{y:26,opacity:0,duration:0.9,stagger:0.12,scrollTrigger:{trigger:'#placements',start:'top 85%'}});
+      gsap.from('.about-image',{x:40,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#about',start:'top 80%'}});
+
+      // CTA
+      gsap.from('.cta',{y:18,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#contact',start:'top 90%'}});
+
+      // subtle floating micro-animations for cards
+      gsap.to('.card',{yoyo:true,repeat:-1,y:'+=4',duration:3,ease:'sine.inOut',stagger:0.5,paused:true});
+      // only play the float on large screens
+      if(window.innerWidth > 900){
+        gsap.utils.toArray('.card').forEach((c,i)=>{
+          gsap.to(c,{y:'+=6',duration:4+(i%3),yoyo:true,repeat:-1,ease:'sine.inOut',delay:i*0.2});
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
